@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,8 +49,14 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         titel.setText(i.getStringExtra("naam"));
+
         if(i.getStringExtra("id")!=null){
             request = BASE_URL + i.getStringExtra("id") + META;
+            new DetailActivity.RetrieveFeedTask().execute();
+        }
+        else{
+            Toast toast = Toast.makeText(this,"Invalid DATA",Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 
@@ -87,13 +94,16 @@ public class DetailActivity extends AppCompatActivity {
             }
             else {
                 JSONObject object = null;
-                JSONArray result = new JSONArray();
-                /*try {
+                try {
                     object = new JSONObject(response);
-                    result = object.getJSONArray("results");
+                    TextView tagline = (TextView) findViewById(R.id.tagline);
+                    TextView releasedate = (TextView) findViewById(R.id.releasedate);
+                    releasedate.setText(object.getString("release_date"));
+                    tagline.setText(object.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                /*
                 for(int i=0; i<result.length();i++){
                     try {
                         HashMap<String,String> tempList = new HashMap<String, String>();
@@ -115,3 +125,4 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 }
+//gridview: //https://developer.android.com/guide/topics/ui/layout/gridview.html

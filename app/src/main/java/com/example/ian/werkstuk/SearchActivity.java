@@ -143,16 +143,13 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 }
 
-                //this.setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, R.id.label, adobe_products));
 
-                //ListView lv = getListView();
                 ListAdapter adapter = new SimpleAdapter(
                         SearchActivity.this,lijst,R.layout.list_view,new String[]{"naam"}, new int[]{R.id.movieName});
                 responseView.setAdapter(adapter);
 
-                //ListAdapter adapter = new SimpleAdapter(SearchActivity.this,lijst,R.layout.list_view,)
-                //responseView.setText(lijst.toString());
             }
         }
     }
 }
+//listview: https://www.androidhive.info/2011/10/android-listview-tutorial/

@@ -26,8 +26,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
                 android:layout_gravity="bottom"
-                android:textSize="30dp"
-                android:layout_paddingLeft="5dp"
+                android:textSize="20sp"
                 android:textColor="@color/icons"
                 />
             <ImageView
@@ -37,7 +36,8 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_detail" />
+    <include layout="@layout/content_detail" >
+    </include>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -48,4 +48,7 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/star_on" />
 
+
+
 </android.support.design.widget.CoordinatorLayout>
+
