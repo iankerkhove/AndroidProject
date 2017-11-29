@@ -27,9 +27,13 @@
                 android:id="@+id/title"
                 android:layout_gravity="bottom"
                 android:textSize="30dp"
-                android:layout_marginLeft="5dp"
+                android:layout_paddingLeft="5dp"
                 android:textColor="@color/icons"
                 />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/image" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
