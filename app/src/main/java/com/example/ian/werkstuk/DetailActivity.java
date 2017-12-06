@@ -173,7 +173,7 @@ public class DetailActivity extends AppCompatActivity {
                         a = object.getJSONArray("genres");
                         String value = a.getJSONObject(i).get("name").toString();
                         if(a.length()>1){
-                            genres += value +", ";
+                            genres += value +"\n";
                         }
                         else{
                             genres += value;
