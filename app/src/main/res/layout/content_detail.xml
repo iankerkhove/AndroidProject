@@ -15,7 +15,9 @@
         <TextView
             android:id="@+id/tagline"
             android:layout_column="1"
-            android:padding="3dip"/>
+            android:padding="3dip"
+            android:textSize="15dip"
+            android:layout_marginBottom="10dip"/>
     </TableRow>
     <TableRow>
         <TextView
@@ -23,9 +25,85 @@
             android:layout_column="1"
             android:padding="3dip"/>
         <TextView
-            android:id="@+id/releasedate"
-            android:gravity="right"
+            android:id="@+id/releaseDate"
+            android:gravity="left"
+            android:layout_width="wrap_content"/>
+        </TableRow>
+    <TableRow>
+        <TextView
+            android:text="Original Language: "
+            android:layout_column="1"
+            android:padding="3dip"/>
+        <TextView
+            android:id="@+id/originalLanguage"
+            android:gravity="left"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="Spoken Language(s): "
+            android:layout_column="1"
+            android:padding="3dip"/>
+        <TextView
+            android:id="@+id/spokenLanguage"
+            android:gravity="left"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="Genre(s): "
+            android:layout_column="1"
+            android:padding="3dip"/>
+        <TextView
+            android:id="@+id/genres"
+            android:gravity="left"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="Status: "
+            android:layout_column="1"
+            android:padding="3dip"/>
+        <TextView
+            android:id="@+id/status"
+            android:gravity="left"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="Production country(s): "
+            android:layout_column="1"
+            android:padding="3dip"/>
+        <TextView
+            android:id="@+id/prodCountry"
+            android:gravity="left"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="Vote average: "
+            android:layout_column="1"
+            android:padding="3dip"/>
+        <TextView
+            android:id="@+id/voteAverage"
+            android:gravity="left"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="Overview: "
+            android:layout_column="1"
             android:padding="3dip"/>
     </TableRow>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/overview"/>
+    </LinearLayout>
 </TableLayout>
+
+
 </android.support.v4.widget.NestedScrollView>
