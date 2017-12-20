@@ -52,10 +52,12 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String key = lijst.get(position).get("id");
                 String titel = lijst.get(position).get("naam");
+                String soort = lijst.get(position).get("sort");
 
                 Intent i = new Intent(SearchActivity.this, DetailActivity.class);
                 i.putExtra("naam", titel);
                 i.putExtra("id",key);
+                i.putExtra("sort", soort);
                 startActivity(i);
             }
         });
@@ -133,9 +135,11 @@ public class SearchActivity extends AppCompatActivity {
                         if(rdbMovie.isChecked()){
                             tempList.put("id", temp.getString("id"));
                             tempList.put("naam", temp.getString("original_title"));
+                            tempList.put("sort","movie");
                         }else{
                             tempList.put("id", temp.getString("id"));
                             tempList.put("naam", temp.getString("name"));
+                            tempList.put("sort","tv");
                         }
                         lijst.add(tempList);
                     } catch (JSONException e) {

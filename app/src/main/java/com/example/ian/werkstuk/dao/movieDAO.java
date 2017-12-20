@@ -17,11 +17,11 @@ import java.util.List;
 @Dao
 public interface movieDAO {
 
-    @Query("SELECT * FROM product")
-    List<movie> getAll();
-
     @Query("SELECT * FROM movie WHERE title LIKE :titel LIMIT 1")
     movie findByName(String titel);
+
+    @Query("SELECT * FROM movie")
+    List<movie> getAll();
 
     @Insert
     void insertAll(List<movie> m);

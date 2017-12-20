@@ -3,7 +3,6 @@ package com.example.ian.werkstuk;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,30 +12,25 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
 public class DetailActivity extends AppCompatActivity {
     String request;
-    private String BASE_URL = "http://api.themoviedb.org/3/movie/";
-    private String META = "?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US";
+    private String BASEM_URL = "http://api.themoviedb.org/3/movie/";
+    private String METAM = "?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US";
+    private String BASET_URL = "https://api.themoviedb.org/3/tv/";
+    private String METAT = "?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US";
     TextView titel;
     TextView tagline;
     TextView release;
@@ -49,6 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView overview;
     ImageView image;
     private Bitmap bmp;
+    String sort="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +65,20 @@ public class DetailActivity extends AppCompatActivity {
         Intent i = getIntent();
         titel.setText(i.getStringExtra("naam"));
 
-        if(i.getStringExtra("id")!=null){
-            request = BASE_URL + i.getStringExtra("id") + META;
-            new DetailActivity.RetrieveFeedTask().execute();
+        //check if movie or tv show
+        if(i.getStringExtra("id")!=null ){
+            if(i.getStringExtra("sort").equals("movie")) {
+                sort="movie";
+                request = BASEM_URL + i.getStringExtra("id") + METAM;
+                new DetailActivity.RetrieveFeedTask().execute();
+            }
+        }
+        else if(i.getStringExtra("id")!=null){
+            if(i.getStringExtra("sort").equals("tv")) {
+                sort="tv";
+                request = BASET_URL + i.getStringExtra("id") + METAT;
+                new DetailActivity.RetrieveFeedTask().execute();
+            }
         }
         else{
             Toast toast = Toast.makeText(this,"Invalid DATA",Toast.LENGTH_LONG);
@@ -86,7 +92,6 @@ public class DetailActivity extends AppCompatActivity {
             try {
                 URL url = new URL(request);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                //Get of Post
                 urlConnection.setRequestMethod("GET");
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -128,74 +133,90 @@ public class DetailActivity extends AppCompatActivity {
                     image = (ImageView) findViewById(R.id.headImage);
                     final String imagePath = object.get("poster_path").toString();
 
+                    if(sort.equals("movie")) {
 
-                    //https://stackoverflow.com/questions/24535924/how-to-get-image-from-url-website-in-imageview-in-android
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            try {
-                                InputStream in = new URL("https://image.tmdb.org/t/p/w300/"+ imagePath).openStream();
-                                bmp = BitmapFactory.decodeStream(in);
-                            } catch (Exception e) {
-                                // log error
+                        //https://stackoverflow.com/questions/24535924/how-to-get-image-from-url-website-in-imageview-in-android
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                try {
+                                    InputStream in = new URL("https://image.tmdb.org/t/p/w300/" + imagePath).openStream();
+                                    bmp = BitmapFactory.decodeStream(in);
+                                } catch (Exception e) {
+                                    // log error
+                                }
+                                return null;
                             }
-                            return null;
-                        }
 
-                        @Override
-                        protected void onPostExecute(Void result) {
-                            if (bmp != null)
-                                image.setImageBitmap(bmp);
-                        }
+                            @Override
+                            protected void onPostExecute(Void result) {
+                                if (bmp != null)
+                                    image.setImageBitmap(bmp);
+                            }
 
-                    }.execute();
-                    //image.setScaleType(ImageView.ScaleType.FIT_XY);
+                        }.execute();
+                        //image.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                    release.setText(object.get("release_date").toString());
-                    tagline.setText(object.get("tagline").toString());
-                    orilanguage.setText(object.get("original_language").toString());
-                    String language ="";
-                    for(int i=0;i< object.getJSONArray("spoken_languages").length();i++){
-                        JSONArray a = new JSONArray();
-                        a = object.getJSONArray("spoken_languages");
-                        String value = a.getJSONObject(i).get("iso_639_1").toString();
-                        if(a.length()>1){
-                            language += value +", ";
+                        release.setText(object.get("release_date").toString());
+                        tagline.setText(object.get("tagline").toString());
+                        orilanguage.setText(object.get("original_language").toString());
+                        String language = "";
+                        for (int i = 0; i < object.getJSONArray("spoken_languages").length(); i++) {
+                            JSONArray a = new JSONArray();
+                            a = object.getJSONArray("spoken_languages");
+                            String value = a.getJSONObject(i).get("iso_639_1").toString();
+                            if (a.length() > 1) {
+                                language += value + ", ";
+                            } else {
+                                language += value;
+                            }
                         }
-                       else{
-                            language += value;
+                        String genres = "";
+                        spolanguage.setText(language);
+                        for (int i = 0; i < object.getJSONArray("genres").length(); i++) {
+                            JSONArray a = new JSONArray();
+                            a = object.getJSONArray("genres");
+                            String value = a.getJSONObject(i).get("name").toString();
+                            if (a.length() > 1) {
+                                genres += value + "\n";
+                            } else {
+                                genres += value;
+                            }
                         }
+                        genre.setText(genres);
+                        statu.setText(object.get("status").toString());
+                        String production = "";
+                        for (int i = 0; i < object.getJSONArray("production_countries").length(); i++) {
+                            JSONArray a = new JSONArray();
+                            a = object.getJSONArray("production_countries");
+                            String value = a.getJSONObject(i).get("iso_3166_1").toString();
+                            if (a.length() > 1) {
+                                production += value + ", ";
+                            } else {
+                                production += value;
+                            }
+                        }
+                        productionCountry.setText(production);
+                        votesAverage.setText(object.get("vote_average").toString());
+                        overview.setText(object.get("overview").toString());
                     }
-                    String genres ="";
-                    spolanguage.setText(language);
-                    for(int i=0;i< object.getJSONArray("genres").length();i++){
-                        JSONArray a = new JSONArray();
-                        a = object.getJSONArray("genres");
-                        String value = a.getJSONObject(i).get("name").toString();
-                        if(a.length()>1){
-                            genres += value +"\n";
+                    else if (sort.equals("tv")){
+                        release.setText(object.get("first_air_date").toString());
+                        orilanguage.setText(object.get("original_language").toString());
+
+                        String genres = "";
+                        for (int i = 0; i < object.getJSONArray("genres").length(); i++) {
+                            JSONArray a = new JSONArray();
+                            a = object.getJSONArray("genres");
+                            String value = a.getJSONObject(i).get("name").toString();
+                            if (a.length() > 1) {
+                                genres += value + "\n";
+                            } else {
+                                genres += value;
+                            }
                         }
-                        else{
-                            genres += value;
-                        }
+                        genre.setText(genres);
                     }
-                    genre.setText(genres);
-                    statu.setText(object.get("status").toString());
-                    String production="";
-                    for(int i=0;i< object.getJSONArray("production_countries").length();i++){
-                        JSONArray a = new JSONArray();
-                        a = object.getJSONArray("production_countries");
-                        String value = a.getJSONObject(i).get("iso_3166_1").toString();
-                        if(a.length()>1){
-                            production += value +", ";
-                        }
-                        else{
-                            production += value;
-                        }
-                    }
-                    productionCountry.setText(production);
-                    votesAverage.setText(object.get("vote_average").toString());
-                    overview.setText(object.get("overview").toString());
 
                 } catch (JSONException e) {
                     e.printStackTrace();
