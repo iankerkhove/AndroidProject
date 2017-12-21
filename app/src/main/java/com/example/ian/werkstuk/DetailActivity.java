@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -137,25 +139,7 @@ public class DetailActivity extends AppCompatActivity {
                     final String imagePath = object.get("poster_path").toString();
 
                     if (sort.equals("tv")){
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                try {
-                                    InputStream in = new URL("https://image.tmdb.org/t/p/w300/" + imagePath).openStream();
-                                    bmp = BitmapFactory.decodeStream(in);
-                                } catch (Exception e) {
-                                    // log error
-                                }
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void result) {
-                                if (bmp != null)
-                                    image.setImageBitmap(bmp);
-                            }
-
-                        }.execute();
+                        Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w300/" + imagePath).into(image);
                         release.setText(object.get("first_air_date").toString());
                         orilanguage.setText(object.get("original_language").toString());
 
@@ -193,29 +177,7 @@ public class DetailActivity extends AppCompatActivity {
                     }
 
                     if(sort.equals("movie")) {
-
-                        //https://stackoverflow.com/questions/24535924/how-to-get-image-from-url-website-in-imageview-in-android
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                try {
-                                    InputStream in = new URL("https://image.tmdb.org/t/p/w300/" + imagePath).openStream();
-                                    bmp = BitmapFactory.decodeStream(in);
-                                } catch (Exception e) {
-                                    // log error
-                                }
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void result) {
-                                if (bmp != null)
-                                    image.setImageBitmap(bmp);
-                            }
-
-                        }.execute();
-                        //image.setScaleType(ImageView.ScaleType.FIT_XY);
-
+                        Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w300/" + imagePath).into(image);
                         release.setText(object.get("release_date").toString());
                         tagline.setText(object.get("tagline").toString());
                         orilanguage.setText(object.get("original_language").toString());
@@ -264,23 +226,6 @@ public class DetailActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                /*
-                for(int i=0; i<result.length();i++){
-                    try {
-                        HashMap<String,String> tempList = new HashMap<String, String>();
-                        JSONObject temp = (JSONObject) result.get(i);
-
-                        if(rdbMovie.isChecked()){
-                            tempList.put("id", temp.getString("id"));
-                            tempList.put("naam", temp.getString("original_title"));
-                        }else{
-                            tempList.put("id", temp.getString("id"));
-                            tempList.put("naam", temp.getString("name"));
-                        }
-                        lijst.add(tempList);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }*/
                 }
 
             }

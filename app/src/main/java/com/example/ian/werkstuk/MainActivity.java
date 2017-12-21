@@ -1,21 +1,16 @@
 package com.example.ian.werkstuk;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,15 +19,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
-    String REQUEST="https://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
+    String request="http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
 
-    ImageView imageView;
-
+    ImageView discoverImage1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +43,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        new MainActivity.RetrieveFeedTask().execute();
     }
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
         private Exception exception;
-
         protected String doInBackground(Void... urls) {
             try {
-                URL url = new URL(REQUEST);
+                URL url = new URL(request);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 try {
@@ -75,30 +69,30 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
         }
-    }
-    protected void onPostExecute(String response) {
 
-        if (response == null) {
-            response = "THERE WAS AN ERROR";
-        } else {
-            JSONObject object = null;
-            JSONArray result = new JSONArray();
-            try {
-                object = new JSONObject(response);
-                result = object.getJSONArray("results");
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            for(int i=0; i<result.length();i++){
+        protected void onPostExecute(String response) {
+            Bitmap bmp;
+            if (response == null) {
+                response = "THERE WAS AN ERROR";
+            } else {
+                JSONObject object = null;
+                JSONArray result = new JSONArray();
                 try {
-                    JSONObject temp = (JSONObject) result.get(i);
-                    imageView = findViewById(R.id.imageView1);
-                    Picasso.with(this).load("https://image.tmdb.org/t/p/w300/eKi8dIrr8voobbaGzDpe8w0PVbC.jpg").into(imageView);
-
+                    object = new JSONObject(response);
+                    result = object.getJSONArray("results");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                discoverImage1 = findViewById(R.id.discover1);
+                for (int i = 0; i < 4;i++) {
+                    try {
+                        JSONObject temp= (JSONObject) result.get(i);
+
+                        Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w300/eKi8dIrr8voobbaGzDpe8w0PVbC.jpg").into(discoverImage1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
