@@ -18,6 +18,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -36,8 +37,10 @@ public class DetailActivity extends AppCompatActivity {
     TextView release;
     TextView orilanguage;
     TextView spolanguage;
+    TextView spolanguageLabel;
     TextView genre;
     TextView statu;
+    TextView productionCountryLabel;
     TextView productionCountry;
     TextView votesAverage;
     TextView overview;
@@ -72,9 +75,7 @@ public class DetailActivity extends AppCompatActivity {
                 request = BASEM_URL + i.getStringExtra("id") + METAM;
                 new DetailActivity.RetrieveFeedTask().execute();
             }
-        }
-        else if(i.getStringExtra("id")!=null){
-            if(i.getStringExtra("sort").equals("tv")) {
+            else if(i.getStringExtra("sort").equals("tv")) {
                 sort="tv";
                 request = BASET_URL + i.getStringExtra("id") + METAT;
                 new DetailActivity.RetrieveFeedTask().execute();
@@ -124,14 +125,72 @@ public class DetailActivity extends AppCompatActivity {
                     tagline = (TextView) findViewById(R.id.tagline);
                     release = (TextView) findViewById(R.id.releaseDate);
                     orilanguage = (TextView) findViewById(R.id.originalLanguage);
+                    spolanguageLabel = (TextView) findViewById(R.id.spokenLanguageLabel);
                     spolanguage = (TextView) findViewById(R.id.spokenLanguage);
                     genre = (TextView) findViewById(R.id.genres);
                     statu = (TextView) findViewById(R.id.status);
+                    productionCountryLabel = (TextView) findViewById(R.id.prodCountryLabel);
                     productionCountry = (TextView) findViewById(R.id.prodCountry);
                     votesAverage = (TextView) findViewById(R.id.voteAverage);
                     overview = (TextView) findViewById(R.id.overview);
                     image = (ImageView) findViewById(R.id.headImage);
                     final String imagePath = object.get("poster_path").toString();
+
+                    if (sort.equals("tv")){
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                try {
+                                    InputStream in = new URL("https://image.tmdb.org/t/p/w300/" + imagePath).openStream();
+                                    bmp = BitmapFactory.decodeStream(in);
+                                } catch (Exception e) {
+                                    // log error
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void result) {
+                                if (bmp != null)
+                                    image.setImageBitmap(bmp);
+                            }
+
+                        }.execute();
+                        release.setText(object.get("first_air_date").toString());
+                        orilanguage.setText(object.get("original_language").toString());
+
+                        String genres = "";
+                        for (int i = 0; i < object.getJSONArray("genres").length(); i++) {
+                            JSONArray a = new JSONArray();
+                            a = object.getJSONArray("genres");
+                            String value = a.getJSONObject(i).get("name").toString();
+                            if (a.length() > 1) {
+                                genres += value + "\n";
+                            } else {
+                                genres += value;
+                            }
+                        }
+                        genre.setText(genres);
+
+                        statu.setText(object.get("status").toString());
+                        String production="";
+                        for (int i = 0; i < object.getJSONArray("production_companies").length(); i++) {
+                            JSONArray a = new JSONArray();
+                            a = object.getJSONArray("production_companies");
+                            String value = a.getJSONObject(i).get("name").toString();
+                            if (a.length() > 1) {
+                                production += value + ", ";
+                            } else {
+                                production += value;
+                            }
+                        }
+                        spolanguageLabel.setText("Number of Seasons: ");
+                        spolanguage.setText(object.get("number_of_seasons").toString());
+                        productionCountryLabel.setText("Production Companies: ");
+                        productionCountry.setText(production);
+                        votesAverage.setText(object.get("vote_average").toString());
+                        overview.setText(object.get("overview").toString());
+                    }
 
                     if(sort.equals("movie")) {
 
@@ -200,23 +259,7 @@ public class DetailActivity extends AppCompatActivity {
                         votesAverage.setText(object.get("vote_average").toString());
                         overview.setText(object.get("overview").toString());
                     }
-                    else if (sort.equals("tv")){
-                        release.setText(object.get("first_air_date").toString());
-                        orilanguage.setText(object.get("original_language").toString());
 
-                        String genres = "";
-                        for (int i = 0; i < object.getJSONArray("genres").length(); i++) {
-                            JSONArray a = new JSONArray();
-                            a = object.getJSONArray("genres");
-                            String value = a.getJSONObject(i).get("name").toString();
-                            if (a.length() > 1) {
-                                genres += value + "\n";
-                            } else {
-                                genres += value;
-                            }
-                        }
-                        genre.setText(genres);
-                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -24,6 +24,7 @@
     <TableRow>
         <TextView
             android:text="Release date: "
+            android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
         <TextView
@@ -34,6 +35,7 @@
     <TableRow>
         <TextView
             android:text="Original Language: "
+            android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
         <TextView
@@ -43,7 +45,9 @@
     </TableRow>
     <TableRow>
         <TextView
+            android:id="@+id/spokenLanguageLabel"
             android:text="Spoken Language(s): "
+            android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
         <TextView
@@ -55,6 +59,7 @@
         <TextView
             android:text="Genre(s): "
             android:layout_column="1"
+            android:textStyle="bold"
             android:padding="3dip"/>
         <TextView
             android:id="@+id/genres"
@@ -64,6 +69,7 @@
     <TableRow>
         <TextView
             android:text="Status: "
+            android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
         <TextView
@@ -73,7 +79,9 @@
     </TableRow>
     <TableRow>
         <TextView
+            android:id="@+id/prodCountryLabel"
             android:text="Production country(s): "
+            android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
         <TextView
@@ -84,6 +92,7 @@
     <TableRow>
         <TextView
             android:text="Vote average: "
+            android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
         <TextView
@@ -94,6 +103,7 @@
     <TableRow>
         <TextView
             android:text="Overview: "
+            android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
     </TableRow>

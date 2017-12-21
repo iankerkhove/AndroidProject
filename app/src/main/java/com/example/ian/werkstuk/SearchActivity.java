@@ -127,6 +127,9 @@ public class SearchActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                //maak lijst leeg van vorige zoekactie
+                lijst.clear();
+                //vul lijst op
                 for(int i=0; i<result.length();i++){
                     try {
                         HashMap<String,String> tempList = new HashMap<String, String>();
