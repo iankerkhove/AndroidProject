@@ -16,4 +16,6 @@
     <string name="txt_overview">Overzicht:</string>
     <string name="toast_invalid">ONGELDIGE INVOER</string>
     <string name="toast_invalidrdb">Gelieve een film of serie te kiezen</string>
+    <string name="title_activity_detail">" "</string>
+    <string name="txt_discover">Uitgelicht</string>
 </resources>
