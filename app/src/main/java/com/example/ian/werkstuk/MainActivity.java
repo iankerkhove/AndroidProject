@@ -85,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 discoverImage1 = findViewById(R.id.discover1);
-                for (int i = 0; i < 4;i++) {
+                for (int i = 1; i <= 4;i++) {
                     try {
                         JSONObject temp= (JSONObject) result.get(i);
-
-                        Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w300/eKi8dIrr8voobbaGzDpe8w0PVbC.jpg").into(discoverImage1);
+                        String poster = temp.get("poster_path").toString();
+                        Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w300/"+ poster).into(discoverImage1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -23,7 +23,7 @@
     </TableRow>
     <TableRow>
         <TextView
-            android:text="Release date: "
+            android:text="@string/txt_release"
             android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
@@ -34,7 +34,7 @@
         </TableRow>
     <TableRow>
         <TextView
-            android:text="Original Language: "
+            android:text="@string/txt_orilanguage"
             android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
@@ -46,7 +46,7 @@
     <TableRow>
         <TextView
             android:id="@+id/spokenLanguageLabel"
-            android:text="Spoken Language(s): "
+            android:text="@string/txt_spolanguage"
             android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
@@ -57,7 +57,7 @@
     </TableRow>
     <TableRow>
         <TextView
-            android:text="Genre(s): "
+            android:text="@string/txt_genre"
             android:layout_column="1"
             android:textStyle="bold"
             android:padding="3dip"/>
@@ -68,7 +68,7 @@
     </TableRow>
     <TableRow>
         <TextView
-            android:text="Status: "
+            android:text="@string/txt_status"
             android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
@@ -80,7 +80,7 @@
     <TableRow>
         <TextView
             android:id="@+id/prodCountryLabel"
-            android:text="Production country(s): "
+            android:text="@string/txt_procountry"
             android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
@@ -91,7 +91,7 @@
     </TableRow>
     <TableRow>
         <TextView
-            android:text="Vote average: "
+            android:text="@string/txt_vote"
             android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>
@@ -102,7 +102,7 @@
     </TableRow>
     <TableRow>
         <TextView
-            android:text="Overview: "
+            android:text="@string/txt_overview"
             android:textStyle="bold"
             android:layout_column="1"
             android:padding="3dip"/>

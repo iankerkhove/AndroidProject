@@ -84,7 +84,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
         else{
-            Toast toast = Toast.makeText(this,"Invalid DATA",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this,"@string/toast_invalid",Toast.LENGTH_LONG);
             toast.show();
         }
     }

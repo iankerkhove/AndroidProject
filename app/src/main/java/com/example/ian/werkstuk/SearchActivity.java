@@ -79,7 +79,7 @@ public class SearchActivity extends AppCompatActivity {
 
         }
         else {
-            Toast toast = Toast.makeText(this,"Please select Movie or TV Show",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this,"@string/toast_invalidrdb",Toast.LENGTH_LONG);
             toast.show();
         }
 
