@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,10 +53,33 @@ public class DetailActivity extends AppCompatActivity {
     ImageView image;
     private Bitmap bmp;
     String sort="";
+
+    public boolean isTablet() {
+        try {
+            // Compute screen size
+            DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+            float screenWidth = dm.widthPixels / dm.xdpi;
+            float screenHeight = dm.heightPixels / dm.ydpi;
+            double size = Math.sqrt(Math.pow(screenWidth, 2) +
+                    Math.pow(screenHeight, 2));
+            // Tablet devices should have a screen size greater than 6 inches
+            return size >= 7;
+        } catch(Throwable t) {
+            Log.wtf("", "Failed to compute screen size", t);
+            return false;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        if(isTablet()){
+            setContentView(R.layout.fragment_test);
+        }
+        else{
+            setContentView(R.layout.activity_detail);
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 

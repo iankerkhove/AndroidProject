@@ -3,8 +3,11 @@ package com.example.ian.werkstuk;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,10 +44,36 @@ public class SearchActivity extends AppCompatActivity {
     private RadioButton rdbMovie;
     private RadioButton rdbTVShow;
     private  ArrayList<HashMap<String,String>> lijst = new ArrayList<HashMap<String, String>>();
+
+    //https://forum.unity.com/threads/reliable-way-to-detect-tablet-on-android.127184
+    public boolean isTablet() {
+        try {
+            // Compute screen size
+            DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+            float screenWidth = dm.widthPixels / dm.xdpi;
+            float screenHeight = dm.heightPixels / dm.ydpi;
+            double size = Math.sqrt(Math.pow(screenWidth, 2) +
+                    Math.pow(screenHeight, 2));
+            // Tablet devices should have a screen size greater than 6 inches
+            return size >= 7;
+        } catch(Throwable t) {
+            Log.wtf("", "Failed to compute screen size", t);
+            return false;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        if(isTablet()){
+            setContentView(R.layout.fragment_test);
+        }
+        else{
+            setContentView(R.layout.activity_search);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        }
+
+
+
         responseView = (ListView) findViewById(R.id.responseView);
          rdbMovie = (RadioButton) findViewById(R.id.rdbMovie);
          rdbTVShow = (RadioButton) findViewById(R.id.rdbTVShow);
