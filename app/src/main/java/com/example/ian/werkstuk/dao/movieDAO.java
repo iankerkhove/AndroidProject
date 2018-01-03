@@ -20,6 +20,9 @@ public interface movieDAO {
     @Query("SELECT * FROM movie WHERE title LIKE :titel LIMIT 1")
     movie findByName(String titel);
 
+    @Query("SELECT * FROM movie WHERE id LIKE :id LIMIT 1")
+    movie findById(int id);
+
     @Query("SELECT * FROM movie")
     List<movie> getAll();
 

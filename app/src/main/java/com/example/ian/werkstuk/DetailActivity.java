@@ -94,17 +94,18 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 movie m = new movie();
-                m.setStatus(statu.toString());
+                m.setTagline(tagline.getText().toString());
+                m.setStatus(statu.getText().toString());
                 m.setTitle(title);
-                m.setSpoLanguage(spolanguage.toString());
-                m.setReleasedate(release.toString());
-                m.setStatus(statu.toString());
-                m.setProdCountry(productionCountry.toString());
-                m.setOverview(overview.toString());
-                m.setOriLanguage(orilanguage.toString());
-                m.setImage(image.toString());
-                m.setGenre(genre.toString());
+                m.setSpoLanguage(spolanguage.getText().toString());
+                m.setReleasedate(release.getText().toString());
+                m.setStatus(statu.getText().toString());
+                m.setProdCountry(productionCountry.getText().toString());
+                m.setOverview(overview.getText().toString());
+                m.setOriLanguage(orilanguage.getText().toString());
+                m.setGenre(genre.getText().toString());
                 m.setId(Integer.parseInt(id));
+                m.setVoteAverage(votesAverage.getText().toString());
                 database.MovieDAO().insert(m);
                 Snackbar.make(view, "Movie succesvol toegevoegd", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

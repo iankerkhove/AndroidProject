@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -69,8 +70,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //lijst voor opgeslagen films
-        List<movie> films = database.MovieDAO().getAll();
+        final List<movie> films = database.MovieDAO().getAll();
         listView.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int key = films.get(position).getId();
+
+                Intent i = new Intent(MainActivity.this, DetailLocalActivity.class);
+                i.putExtra("movieId", key);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -86,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();
+                //Intent in = new Intent(MainActivity.this, SettingActivity.class);
+                //startActivity(in);
                 break;
             default:
                 break;
