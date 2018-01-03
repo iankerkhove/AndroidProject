@@ -21,5 +21,10 @@
         >
 
     </GridView>
-
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/movieView"
+        android:divider="@color/colorAccent"
+        android:dividerHeight="1dp"></ListView>
 </android.support.constraint.ConstraintLayout>

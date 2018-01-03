@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ian.werkstuk.dao.DB;
+import com.example.ian.werkstuk.model.movie;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -53,6 +55,9 @@ public class DetailActivity extends AppCompatActivity {
     ImageView image;
     private Bitmap bmp;
     String sort="";
+    DB database = null;
+    String title="";
+    String id="";
 
     public boolean isTablet() {
         try {
@@ -73,6 +78,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        database  = DB.getDb(this);
         if(isTablet()){
             setContentView(R.layout.fragment_test);
         }
@@ -87,7 +93,20 @@ public class DetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                movie m = new movie();
+                m.setStatus(statu.toString());
+                m.setTitle(title);
+                m.setSpoLanguage(spolanguage.toString());
+                m.setReleasedate(release.toString());
+                m.setStatus(statu.toString());
+                m.setProdCountry(productionCountry.toString());
+                m.setOverview(overview.toString());
+                m.setOriLanguage(orilanguage.toString());
+                m.setImage(image.toString());
+                m.setGenre(genre.toString());
+                m.setId(Integer.parseInt(id));
+                database.MovieDAO().insert(m);
+                Snackbar.make(view, "Movie succesvol toegevoegd", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -266,6 +285,8 @@ public class DetailActivity extends AppCompatActivity {
                         productionCountry.setText(production);
                         votesAverage.setText(object.get("vote_average").toString());
                         overview.setText(object.get("overview").toString());
+                        title = object.get("title").toString();
+                        id = object.get("id").toString();
                     }
 
 

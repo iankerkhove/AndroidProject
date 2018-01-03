@@ -13,11 +13,11 @@ import com.example.ian.werkstuk.model.movie;
 /**
  * Created by ian on 13/12/2017.
  */
-@Database(entities = {movie.class},version=1)
+@Database(entities = {movie.class},version=2)
 public abstract class DB extends RoomDatabase {
     public abstract movieDAO MovieDAO();
     public static DB getDb(Context context){
-        return Room.databaseBuilder(context.getApplicationContext(),DB.class,"movieDb").build();
+        return Room.databaseBuilder(context.getApplicationContext(),DB.class,"movieDb").fallbackToDestructiveMigration().allowMainThreadQueries().build();
     }
 
 }

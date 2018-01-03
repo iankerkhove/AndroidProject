@@ -2,6 +2,7 @@ package com.example.ian.werkstuk;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Movie;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,10 +13,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ian.werkstuk.dao.DB;
+import com.example.ian.werkstuk.model.movie;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -27,28 +32,47 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     String request="http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
-
+    DB database = null;
     ImageView discoverImage1;
+    ListView listView=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
+        database = DB.getDb(this);
+        listView = findViewById(R.id.movieView);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
+
             }
         });
         new MainActivity.RetrieveFeedTask().execute();
+
+        /*//lijst voor opgeslagen films
+        List<movie> films = database.MovieDAO().getAll();
+        listView.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));*/
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //lijst voor opgeslagen films
+        List<movie> films = database.MovieDAO().getAll();
+        listView.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
