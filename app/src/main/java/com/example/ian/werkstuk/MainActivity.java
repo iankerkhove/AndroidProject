@@ -16,7 +16,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,14 +36,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    String request="http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
+    String request = "http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
     DB database = null;
     ImageView discoverImage1;
-    ListView listViewM=null;
-    ListView listViewT= null;
+    ListView listViewM = null;
+    ListView listViewT = null;
+    ListView discoverView = null;
+    private ArrayList<HashMap<String, String>> lijst = new ArrayList<HashMap<String, String>>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         database = DB.getDb(this);
         listViewM = findViewById(R.id.movieView);
         listViewT = findViewById(R.id.tvView);
+        discoverView = findViewById(R.id.discoverView);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
@@ -63,9 +71,21 @@ public class MainActivity extends AppCompatActivity {
         });
         new MainActivity.RetrieveFeedTask().execute();
 
-        /*//lijst voor opgeslagen films
-        List<movie> films = database.MovieDAO().getAll();
-        listView.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));*/
+        discoverView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String key = lijst.get(position).get("id");
+                String titel = lijst.get(position).get("naam");
+                String soort = lijst.get(position).get("sort");
+
+                Intent i = new Intent(MainActivity.this, DetailActivity.class);
+                i.putExtra("naam", titel);
+                i.putExtra("id",key);
+                i.putExtra("sort", soort);
+                startActivity(i);
+            }
+        });
 
     }
 
@@ -75,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
         //lijst voor opgeslagen films
         final List<movie> films = database.MovieDAO().getTop4();
         final List<tvshow> tvshows = database.TvDAO().getTop4();
-        listViewM.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));
-        listViewT.setAdapter(new ArrayAdapter<tvshow>(this,R.layout.list_view,R.id.movieName,tvshows));
+        listViewM.setAdapter(new ArrayAdapter<movie>(this, R.layout.list_view, R.id.movieName, films));
+        listViewT.setAdapter(new ArrayAdapter<tvshow>(this, R.layout.list_view, R.id.movieName, tvshows));
 
 
         listViewM.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -87,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent i = new Intent(MainActivity.this, DetailLocalActivity.class);
                 i.putExtra("movieId", key);
-                i.putExtra("sort","movie");
+                i.putExtra("sort", "movie");
                 startActivity(i);
             }
         });
@@ -99,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent i = new Intent(MainActivity.this, DetailLocalActivity.class);
                 i.putExtra("tvId", key);
-                i.putExtra("sort","tv");
+                i.putExtra("sort", "tv");
                 startActivity(i);
             }
         });
@@ -111,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_detail, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -124,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_favorite:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
-                Intent i = new Intent(MainActivity.this,FavoriteActivity.class);
+                Intent i = new Intent(MainActivity.this, FavoriteActivity.class);
                 startActivity(i);
                 return true;
             default:
@@ -133,8 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
         private Exception exception;
+
         protected String doInBackground(Void... urls) {
             try {
                 URL url = new URL(request);
@@ -172,6 +195,27 @@ public class MainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                //maak lijst leeg van vorige zoekactie
+                lijst.clear();
+                //vul lijst op
+                for (int i = 0; i < 4; i++) {
+                    try {
+                        HashMap<String, String> tempList = new HashMap<String, String>();
+                        JSONObject temp = (JSONObject) result.get(i);
+
+                        tempList.put("id", temp.getString("id"));
+                        tempList.put("naam", temp.getString("title"));
+                        tempList.put("sort", "movie");
+
+                        lijst.add(tempList);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ListAdapter adapter = new SimpleAdapter(
+                        MainActivity.this,lijst,R.layout.list_view,new String[]{"naam"}, new int[]{R.id.movieName});
+                discoverView.setAdapter(adapter);
+
                /* discoverImage1 = findViewById(R.id.discover1);
                 for (int i = 1; i <= 4;i++) {
                     try {

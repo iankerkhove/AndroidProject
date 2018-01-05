@@ -1,6 +1,7 @@
 package com.example.wear;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
@@ -11,7 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -29,63 +32,32 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends WearableActivity {
 
-    private TextView mTextView;
-    private ListView responseView;
-    private EditText txtSearch;
-    private String BASEMOVIE_URL = "https://api.themoviedb.org/3/search/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&query=";
-    private String BASETV_URL = "https://api.themoviedb.org/3/search/tv?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&query=";
-    private String request;
-    private RadioButton rdbMovie;
-    private RadioButton rdbTVShow;
-    private ArrayList<HashMap<String,String>> lijst = new ArrayList<HashMap<String, String>>();
-
+    String request = "http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
+    ListView responseView = null;
+    private ArrayList<HashMap<String, String>> lijst = new ArrayList<HashMap<String, String>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView = (TextView) findViewById(R.id.text);
-        responseView = (ListView) findViewById(R.id.responseView);
-        rdbMovie = (RadioButton) findViewById(R.id.rdbMovie);
-        rdbTVShow = (RadioButton) findViewById(R.id.rdbTVShow);
-        // Enables Always-on
-        setAmbientEnabled();
-    }
+        responseView = findViewById(R.id.responseView);
 
-    public void btnSearch(View v){
-        String search = "";
-        txtSearch = (EditText) findViewById(R.id.searchField);
-
-        if(rdbMovie.isChecked()){
-            search  = txtSearch.getText().toString().replace(" ","%20");
-            request = BASEMOVIE_URL + search;
-            new MainActivity.RetrieveFeedTask().execute();
-
-        }else if(rdbTVShow.isChecked()){
-            search = txtSearch.getText().toString().replace(" ","%20");
-            request = BASETV_URL + search;
-            new MainActivity.RetrieveFeedTask().execute();
-
-        }
-        else {
-            Toast toast = Toast.makeText(this,"@string/toast_invalidrdb",Toast.LENGTH_LONG);
-            toast.show();
-        }
-
+        new MainActivity.RetrieveFeedTask().execute();
 
     }
 
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
         private Exception exception;
+
         protected String doInBackground(Void... urls) {
             try {
                 URL url = new URL(request);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                //Get of Post
                 urlConnection.setRequestMethod("GET");
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -106,49 +78,52 @@ public class MainActivity extends WearableActivity {
         }
 
         protected void onPostExecute(String response) {
-            String titel = "";
-
+            Bitmap bmp;
             if (response == null) {
                 response = "THERE WAS AN ERROR";
-            }
-            else{
+            } else {
                 JSONObject object = null;
                 JSONArray result = new JSONArray();
                 try {
                     object = new JSONObject(response);
                     result = object.getJSONArray("results");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 //maak lijst leeg van vorige zoekactie
                 lijst.clear();
                 //vul lijst op
-                for(int i=0; i<result.length();i++){
+                for (int i = 0; i < 4; i++) {
                     try {
-                        HashMap<String,String> tempList = new HashMap<String, String>();
+                        HashMap<String, String> tempList = new HashMap<String, String>();
                         JSONObject temp = (JSONObject) result.get(i);
 
-                        if(rdbMovie.isChecked()){
-                            tempList.put("id", temp.getString("id"));
-                            tempList.put("naam", temp.getString("original_title"));
-                            tempList.put("sort","movie");
-                        }else{
-                            tempList.put("id", temp.getString("id"));
-                            tempList.put("naam", temp.getString("name"));
-                            tempList.put("sort","tv");
-                        }
+                        tempList.put("id", temp.getString("id"));
+                        tempList.put("naam", temp.getString("title"));
+                        tempList.put("sort", "movie");
+
                         lijst.add(tempList);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
-
                 ListAdapter adapter = new SimpleAdapter(
                         MainActivity.this,lijst,R.layout.list_view,new String[]{"naam"}, new int[]{R.id.movieName});
                 responseView.setAdapter(adapter);
 
+               /* discoverImage1 = findViewById(R.id.discover1);
+                for (int i = 1; i <= 4;i++) {
+                    try {
+                        JSONObject temp= (JSONObject) result.get(i);
+                        String poster = temp.get("poster_path").toString();
+                        Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w300/"+ poster).into(discoverImage1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }*/
             }
         }
     }
+
 }

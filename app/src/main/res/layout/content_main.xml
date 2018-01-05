@@ -20,13 +20,20 @@
             android:id="@+id/labelDiscover"
             android:textStyle="bold"
             android:textAlignment="center"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/discoverView"
+            android:divider="@color/colorAccent"
+            android:dividerHeight="1dp"
+            android:layout_below="@+id/labelDiscover"></ListView>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/lbl_favmov"
             android:textStyle="bold"
             android:id="@+id/labelFavoriteM"
-            android:layout_below="@+id/labelDiscover"
+            android:layout_below="@+id/discoverView"
             android:textAlignment="center"/>
         <ListView
             android:layout_width="match_parent"
