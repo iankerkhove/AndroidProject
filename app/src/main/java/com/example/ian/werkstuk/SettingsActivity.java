@@ -1,15 +1,11 @@
 package com.example.ian.werkstuk;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +18,8 @@ import android.widget.TextView;
 
 
 //https://www.logicchip.com/dynamic-action-bar-background-color/
-public class SettingActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
+
     private ColorDrawable color;
     SeekBar seekBarRed,seekBarGreen,seekBarBlue;
     RadioGroup idForRadioGroup;
@@ -38,7 +35,7 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_settings);
         idForRadioGroup=(RadioGroup)findViewById(R.id.idForRadioGroup);
         RadioButton rButton = (RadioButton) idForRadioGroup.getChildAt(0);
         rButton.setChecked(true);
@@ -239,7 +236,7 @@ public class SettingActivity extends AppCompatActivity {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
         startActivity(i);*/
 
-        Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+        Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
         String results = "" + r + g + b;
         intent.putExtra("colors",results);
         intent.putExtra("red",r);

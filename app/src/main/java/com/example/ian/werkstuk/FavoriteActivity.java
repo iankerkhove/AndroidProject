@@ -80,8 +80,7 @@ public class FavoriteActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();
-                /*Intent in = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(in);*/
+
                 break;
             case R.id.action_favorite:
                 // User chose the "Favorite" action, mark the current item

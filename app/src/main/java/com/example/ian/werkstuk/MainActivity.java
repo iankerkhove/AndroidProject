@@ -135,16 +135,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // action with ID action_settings was selected
             case R.id.action_settings:
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();
-                /*Intent in = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(in);*/
+                Intent in = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(in);
                 break;
             case R.id.action_favorite:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+
                 Intent i = new Intent(MainActivity.this, FavoriteActivity.class);
                 startActivity(i);
                 return true;

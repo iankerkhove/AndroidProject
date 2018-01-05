@@ -48,6 +48,14 @@ public class MainActivity extends WearableActivity {
         responseView = findViewById(R.id.responseView);
 
         new MainActivity.RetrieveFeedTask().execute();
+        responseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, "See it in theater", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
 
     }
 
