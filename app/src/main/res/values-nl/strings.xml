@@ -18,4 +18,10 @@
     <string name="toast_invalidrdb">Gelieve een film of serie te kiezen</string>
     <string name="title_activity_detail">" "</string>
     <string name="txt_discover">Uitgelicht</string>
+    <string name="txt_season">Aantal seizoenen:</string>
+    <string name="txt_companie">"Productiebedrijven: "</string>
+    <string name="action_favorite">Favorieten</string>
+    <string name="lbl_discover">Ontdek</string>
+    <string name="lbl_favmov">Favoriete films</string>
+    <string name="lbl_favtv">Favoriete series</string>
 </resources>

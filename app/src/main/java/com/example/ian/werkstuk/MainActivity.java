@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.ian.werkstuk.dao.DB;
 import com.example.ian.werkstuk.model.movie;
+import com.example.ian.werkstuk.model.tvshow;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     String request="http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
     DB database = null;
     ImageView discoverImage1;
-    ListView listView=null;
+    ListView listViewM=null;
+    ListView listViewT= null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         database = DB.getDb(this);
-        listView = findViewById(R.id.movieView);
+        listViewM = findViewById(R.id.movieView);
+        listViewT = findViewById(R.id.tvView);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
@@ -70,11 +73,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //lijst voor opgeslagen films
-        final List<movie> films = database.MovieDAO().getAll();
-        listView.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));
+        final List<movie> films = database.MovieDAO().getTop4();
+        final List<tvshow> tvshows = database.TvDAO().getTop4();
+        listViewM.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));
+        listViewT.setAdapter(new ArrayAdapter<tvshow>(this,R.layout.list_view,R.id.movieName,tvshows));
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewM.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,6 +87,19 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent i = new Intent(MainActivity.this, DetailLocalActivity.class);
                 i.putExtra("movieId", key);
+                i.putExtra("sort","movie");
+                startActivity(i);
+            }
+        });
+        listViewT.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int key = tvshows.get(position).getId();
+
+                Intent i = new Intent(MainActivity.this, DetailLocalActivity.class);
+                i.putExtra("tvId", key);
+                i.putExtra("sort","tv");
                 startActivity(i);
             }
         });
@@ -100,9 +118,15 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();
-                //Intent in = new Intent(MainActivity.this, SettingActivity.class);
-                //startActivity(in);
+                /*Intent in = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(in);*/
                 break;
+            case R.id.action_favorite:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Intent i = new Intent(MainActivity.this,FavoriteActivity.class);
+                startActivity(i);
+                return true;
             default:
                 break;
         }

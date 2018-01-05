@@ -114,4 +114,10 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="txt_season">Number of seasons:</string>
+    <string name="txt_companie">Production Companys:</string>
+    <string name="action_favorite">Favorites</string>
+    <string name="lbl_discover">Discover</string>
+    <string name="lbl_favmov">Favorite Movies</string>
+    <string name="lbl_favtv">Favorite TV Shows</string>
 </resources>

@@ -26,6 +26,9 @@ public interface movieDAO {
     @Query("SELECT * FROM movie")
     List<movie> getAll();
 
+    @Query("SELECT * FROM movie ORDER BY date DESC LIMIT 4 ")
+    List<movie> getTop4();
+
     @Insert
     void insertAll(List<movie> m);
 

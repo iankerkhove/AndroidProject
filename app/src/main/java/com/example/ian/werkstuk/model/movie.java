@@ -10,6 +10,9 @@ import android.arch.persistence.room.PrimaryKey;
 import android.media.Image;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 
 @Entity
 public class movie implements Serializable {
@@ -48,6 +51,9 @@ public class movie implements Serializable {
 
     @ColumnInfo(name = "image")
     private String image;
+
+    @ColumnInfo(name = "date")
+    private String cal = Calendar.getInstance().toString();
 
     public String getGenre() {
         return genre;
@@ -143,6 +149,14 @@ public class movie implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getCal() {
+        return cal;
+    }
+
+    public void setCal(String cal) {
+        this.cal = cal;
     }
 
     @Override

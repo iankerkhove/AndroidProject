@@ -5,13 +5,15 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.media.Image;
 
+import java.util.Calendar;
+
 /**
  * Created by ian on 27/12/2017.
  */
 
 @Entity
 public class tvshow {
-    @PrimaryKey()
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
     @ColumnInfo(name = "title")
@@ -43,6 +45,9 @@ public class tvshow {
 
     @ColumnInfo(name = "image")
     private String image;
+
+    @ColumnInfo(name = "date")
+    private String cal = Calendar.getInstance().toString();
 
     public int getId() {
         return id;
@@ -130,6 +135,20 @@ public class tvshow {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getCal() {
+        return cal;
+    }
+
+    public void setCal(String cal) {
+        this.cal = cal;
+    }
+
+
+    @Override
+    public String toString() {
+        return title;
     }
 }
 
