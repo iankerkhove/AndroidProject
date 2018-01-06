@@ -1,8 +1,12 @@
 package com.example.ian.werkstuk;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Movie;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listViewT = null;
     ListView discoverView = null;
     private ArrayList<HashMap<String, String>> lijst = new ArrayList<HashMap<String, String>>();
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         listViewM = findViewById(R.id.movieView);
         listViewT = findViewById(R.id.tvView);
         discoverView = findViewById(R.id.discoverView);
+        sharedPreferences = getSharedPreferences("key_clr", Context.MODE_PRIVATE);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
@@ -87,18 +94,49 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //set color of action bar
+        int r=sharedPreferences.getInt("a_r",0);
+        int g=sharedPreferences.getInt("a_g",0);
+        int b=sharedPreferences.getInt("a_b",0);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(Color.rgb(r,g,b)));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        //BEGIN CODE OM KLEUR AAN TE PASSEN
+        Intent i = getIntent();
+        if(i.hasExtra("colors")){
+            String color = i.getStringExtra("colors");
+            int rgb = Integer.parseInt(color);
+            int rood = i.getIntExtra("red",0);
+            int groen = i.getIntExtra("green",0);
+            int blauw=i.getIntExtra("blue",0);
+            //String hex = String.format("#%02x%02x%02x", rood, groen,blauw);
+            //ColorDrawable cd = new ColorDrawable();
+            //cd.setColor(rgb);
+            getSupportActionBar().setBackgroundDrawable(
+                    new ColorDrawable(Color.rgb(rood,groen,blauw)));
+           // getSupportActionBar().setBackgroundDrawable(cd);
+        }
+
+
         //lijst voor opgeslagen films
         final List<movie> films = database.MovieDAO().getTop4();
         final List<tvshow> tvshows = database.TvDAO().getTop4();
         listViewM.setAdapter(new ArrayAdapter<movie>(this, R.layout.list_view, R.id.movieName, films));
         listViewT.setAdapter(new ArrayAdapter<tvshow>(this, R.layout.list_view, R.id.movieName, tvshows));
 
-
+        if(films.isEmpty()){
+            TextView t = findViewById(R.id.labelFavoriteM);
+            t.setText("");
+        }
+        if(films.isEmpty() && tvshows.isEmpty()){
+            TextView t = findViewById(R.id.labelFavoriteM);
+            t.setText("If you add favorites you will find them here");
+        }
         listViewM.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -135,6 +173,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_search:
+
+                Intent is = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(is);
+                return true;
             case R.id.action_settings:
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();

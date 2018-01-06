@@ -239,9 +239,10 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
         String results = "" + r + g + b;
         intent.putExtra("colors",results);
-        intent.putExtra("red",r);
-        intent.putExtra("green",g);
-        intent.putExtra("blue",b);
+
+        intent.putExtra("red",sharedPreferences.getInt("a_r",0));
+        intent.putExtra("green",sharedPreferences.getInt("a_g",0));
+        intent.putExtra("blue",sharedPreferences.getInt("a_b",0));
         startActivity(intent);
     }
 }

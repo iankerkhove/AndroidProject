@@ -1,7 +1,12 @@
 package com.example.ian.werkstuk;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +48,10 @@ public class SearchActivity extends AppCompatActivity {
     private String request;
     private RadioButton rdbMovie;
     private RadioButton rdbTVShow;
-    private  ArrayList<HashMap<String,String>> lijst = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> lijst = new ArrayList<HashMap<String, String>>();
+    private Toolbar toolbar= null;
+    private SharedPreferences sharedPreferences;
+
 
     //https://forum.unity.com/threads/reliable-way-to-detect-tablet-on-android.127184
     public boolean isTablet() {
@@ -56,27 +64,30 @@ public class SearchActivity extends AppCompatActivity {
                     Math.pow(screenHeight, 2));
             // Tablet devices should have a screen size greater than 6 inches
             return size >= 7;
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Log.wtf("", "Failed to compute screen size", t);
             return false;
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(isTablet()){
+        if (isTablet()) {
             setContentView(R.layout.fragment_test);
-        }
-        else{
+        } else {
             setContentView(R.layout.activity_search);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         }
 
-
-
+        //https://developer.android.com/training/appbar/up-action.html
+        // Get a support ActionBar corresponding to this toolbar
+        //android.support.v7.app.ActionBar ab = getSupportActionBar();
+        // Enable the Up button
+        //ab.setDisplayHomeAsUpEnabled(true);
+        sharedPreferences = getSharedPreferences("key_clr", Context.MODE_PRIVATE);
         responseView = (ListView) findViewById(R.id.responseView);
-         rdbMovie = (RadioButton) findViewById(R.id.rdbMovie);
-         rdbTVShow = (RadioButton) findViewById(R.id.rdbTVShow);
+        rdbMovie = (RadioButton) findViewById(R.id.rdbMovie);
+        rdbTVShow = (RadioButton) findViewById(R.id.rdbTVShow);
 
         responseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -88,11 +99,39 @@ public class SearchActivity extends AppCompatActivity {
 
                 Intent i = new Intent(SearchActivity.this, DetailActivity.class);
                 i.putExtra("naam", titel);
-                i.putExtra("id",key);
+                i.putExtra("id", key);
                 i.putExtra("sort", soort);
                 startActivity(i);
             }
         });
+
+        //set color of action bar
+        int r=sharedPreferences.getInt("a_r",0);
+        int g=sharedPreferences.getInt("a_g",0);
+        int b=sharedPreferences.getInt("a_b",0);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(Color.rgb(r,g,b)));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //BEGIN CODE OM KLEUR AAN TE PASSEN
+        Intent i = getIntent();
+        if(i.hasExtra("colors")){
+            String color = i.getStringExtra("colors");
+            int rgb = Integer.parseInt(color);
+            int rood = i.getIntExtra("red",0);
+            int groen = i.getIntExtra("green",0);
+            int blauw=i.getIntExtra("blue",0);
+            //String hex = String.format("#%02x%02x%02x", rood, groen,blauw);
+            //ColorDrawable cd = new ColorDrawable();
+            //cd.setColor(rgb);
+            getSupportActionBar().setBackgroundDrawable(
+                    new ColorDrawable(Color.rgb(rood,groen,blauw)));
+            // getSupportActionBar().setBackgroundDrawable(cd);
+        }
     }
 
     @Override
@@ -101,37 +140,50 @@ public class SearchActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_detail, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // action with ID action_settings was selected
+            case R.id.action_search:
+                Toast.makeText(this, "Already in search", Toast.LENGTH_SHORT)
+                        .show();
+                //Intent is = new Intent(SearchActivity.this, SearchActivity.class);
+                //startActivity(is);
+                return true;
             case R.id.action_settings:
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();
+                Intent in = new Intent(SearchActivity.this, SettingsActivity.class);
+                startActivity(in);
                 break;
+            case R.id.action_favorite:
+
+                Intent i = new Intent(SearchActivity.this, FavoriteActivity.class);
+                startActivity(i);
+                return true;
             default:
                 break;
         }
 
         return true;
     }
-    public void btnSearch(View v){
+
+    public void btnSearch(View v) {
         String search = "";
         txtSearch = (EditText) findViewById(R.id.searchField);
 
-        if(rdbMovie.isChecked()){
-            search  = txtSearch.getText().toString().replace(" ","%20");
-                request = BASEMOVIE_URL + search;
-                new SearchActivity.RetrieveFeedTask().execute();
-
-        }else if(rdbTVShow.isChecked()){
-            search = txtSearch.getText().toString().replace(" ","%20");
-             request = BASETV_URL + search;
+        if (rdbMovie.isChecked()) {
+            search = txtSearch.getText().toString().replace(" ", "%20");
+            request = BASEMOVIE_URL + search;
             new SearchActivity.RetrieveFeedTask().execute();
 
-        }
-        else {
-            Toast toast = Toast.makeText(this,"@string/toast_invalidrdb",Toast.LENGTH_LONG);
+        } else if (rdbTVShow.isChecked()) {
+            search = txtSearch.getText().toString().replace(" ", "%20");
+            request = BASETV_URL + search;
+            new SearchActivity.RetrieveFeedTask().execute();
+
+        } else {
+            Toast toast = Toast.makeText(this, "Please select movie or tv show", Toast.LENGTH_LONG);
             toast.show();
         }
 
@@ -140,6 +192,7 @@ public class SearchActivity extends AppCompatActivity {
 
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
         private Exception exception;
+
         protected String doInBackground(Void... urls) {
             try {
                 URL url = new URL(request);
@@ -169,8 +222,7 @@ public class SearchActivity extends AppCompatActivity {
 
             if (response == null) {
                 response = "THERE WAS AN ERROR";
-            }
-            else{
+            } else {
                 JSONObject object = null;
                 JSONArray result = new JSONArray();
                 try {
@@ -182,19 +234,19 @@ public class SearchActivity extends AppCompatActivity {
                 //maak lijst leeg van vorige zoekactie
                 lijst.clear();
                 //vul lijst op
-                for(int i=0; i<result.length();i++){
+                for (int i = 0; i < result.length(); i++) {
                     try {
-                        HashMap<String,String> tempList = new HashMap<String, String>();
+                        HashMap<String, String> tempList = new HashMap<String, String>();
                         JSONObject temp = (JSONObject) result.get(i);
 
-                        if(rdbMovie.isChecked()){
+                        if (rdbMovie.isChecked()) {
                             tempList.put("id", temp.getString("id"));
                             tempList.put("naam", temp.getString("original_title"));
-                            tempList.put("sort","movie");
-                        }else{
+                            tempList.put("sort", "movie");
+                        } else {
                             tempList.put("id", temp.getString("id"));
                             tempList.put("naam", temp.getString("name"));
-                            tempList.put("sort","tv");
+                            tempList.put("sort", "tv");
                         }
                         lijst.add(tempList);
                     } catch (JSONException e) {
@@ -204,7 +256,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
                 ListAdapter adapter = new SimpleAdapter(
-                        SearchActivity.this,lijst,R.layout.list_view,new String[]{"naam"}, new int[]{R.id.movieName});
+                        SearchActivity.this, lijst, R.layout.list_view, new String[]{"naam"}, new int[]{R.id.movieName});
                 responseView.setAdapter(adapter);
 
             }

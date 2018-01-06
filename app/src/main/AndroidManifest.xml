@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_movieapp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchActivity" />
+        <activity android:name=".SearchActivity"
+            />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

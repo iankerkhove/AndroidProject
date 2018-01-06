@@ -120,4 +120,5 @@
     <string name="lbl_discover">Discover</string>
     <string name="lbl_favmov">Favorite Movies</string>
     <string name="lbl_favtv">Favorite TV Shows</string>
+    <string name="action_search">Search</string>
 </resources>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ian.werkstuk.dao.DB;
@@ -40,6 +41,19 @@ public class FavoriteActivity extends AppCompatActivity {
         listViewM.setAdapter(new ArrayAdapter<movie>(this,R.layout.list_view,R.id.movieName,films));
         listViewT.setAdapter(new ArrayAdapter<tvshow>(this,R.layout.list_view,R.id.movieName,tvshows));
 
+
+        if(films.isEmpty()){
+            TextView t = findViewById(R.id.labelFavoriteM);
+            t.setText("");
+        }
+        if(tvshows.isEmpty()){
+            TextView t = findViewById(R.id.labelFavoriteT);
+            t.setText("");
+        }
+        if(films.isEmpty() && tvshows.isEmpty()){
+            TextView t = findViewById(R.id.labelFavoriteM);
+            t.setText("You don't have any favorites yet");
+        }
 
         listViewM.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -77,14 +91,18 @@ public class FavoriteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // action with ID action_settings was selected
+            case R.id.action_search:
+
+                Intent is = new Intent(FavoriteActivity.this, SearchActivity.class);
+                startActivity(is);
+                return true;
             case R.id.action_settings:
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();
-
+                Intent in = new Intent(FavoriteActivity.this, SettingsActivity.class);
+                startActivity(in);
                 break;
             case R.id.action_favorite:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
                 //Intent i = new Intent(MainActivity.this,FavoriteActivity.class);
                 //startActivity(i);
                 Toast.makeText(this, "Already in favorites", Toast.LENGTH_SHORT)

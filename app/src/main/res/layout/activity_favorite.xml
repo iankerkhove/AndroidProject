@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:text="@string/lbl_favmov"
             android:textStyle="bold"
+            android:textSize="20dp"
             android:id="@+id/labelFavoriteM"
             android:layout_below="@+id/labelDiscover"
             android:textAlignment="center"/>
@@ -29,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/lbl_favtv"
+            android:textSize="20dp"
             android:textStyle="bold"
             android:textAlignment="center"
             android:layout_below="@+id/movieView"/>

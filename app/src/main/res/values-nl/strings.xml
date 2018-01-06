@@ -24,4 +24,5 @@
     <string name="lbl_discover">Ontdek</string>
     <string name="lbl_favmov">Favoriete films</string>
     <string name="lbl_favtv">Favoriete series</string>
+    <string name="action_search">Zoek</string>
 </resources>
