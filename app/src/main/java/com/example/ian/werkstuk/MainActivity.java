@@ -45,12 +45,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    String request = "http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
-    DB database = null;
-    ImageView discoverImage1;
-    ListView listViewM = null;
-    ListView listViewT = null;
-    ListView discoverView = null;
+    private String request = "http://api.themoviedb.org/3/discover/movie?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
+    private DB database = null;
+    private ImageView discoverImage1;
+    private ListView listViewM = null;
+    private ListView listViewT = null;
+    private ListView discoverView = null;
     private ArrayList<HashMap<String, String>> lijst = new ArrayList<HashMap<String, String>>();
     private SharedPreferences sharedPreferences;
 
@@ -106,22 +106,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //BEGIN CODE OM KLEUR AAN TE PASSEN
-        Intent i = getIntent();
-        if(i.hasExtra("colors")){
-            String color = i.getStringExtra("colors");
-            int rgb = Integer.parseInt(color);
-            int rood = i.getIntExtra("red",0);
-            int groen = i.getIntExtra("green",0);
-            int blauw=i.getIntExtra("blue",0);
-            //String hex = String.format("#%02x%02x%02x", rood, groen,blauw);
-            //ColorDrawable cd = new ColorDrawable();
-            //cd.setColor(rgb);
-            getSupportActionBar().setBackgroundDrawable(
-                    new ColorDrawable(Color.rgb(rood,groen,blauw)));
-           // getSupportActionBar().setBackgroundDrawable(cd);
-        }
-
+        //set color of action bar
+        int r=sharedPreferences.getInt("a_r",0);
+        int g=sharedPreferences.getInt("a_g",0);
+        int b=sharedPreferences.getInt("a_b",0);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(Color.rgb(r,g,b)));
 
         //lijst voor opgeslagen films
         final List<movie> films = database.MovieDAO().getTop4();

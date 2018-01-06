@@ -1,6 +1,10 @@
 package com.example.ian.werkstuk;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,9 +24,10 @@ import com.example.ian.werkstuk.model.tvshow;
 import java.util.List;
 
 public class FavoriteActivity extends AppCompatActivity {
-    DB database = null;
-    ListView listViewM=null;
-    ListView listViewT= null;
+    private DB database = null;
+    private ListView listViewM=null;
+    private ListView listViewT= null;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +36,27 @@ public class FavoriteActivity extends AppCompatActivity {
         database = DB.getDb(this);
         listViewM = findViewById(R.id.movieView);
         listViewT = findViewById(R.id.tvView);
+        sharedPreferences = getSharedPreferences("key_clr", Context.MODE_PRIVATE);
+
+
+        //set color of action bar
+        int r=sharedPreferences.getInt("a_r",0);
+        int g=sharedPreferences.getInt("a_g",0);
+        int b=sharedPreferences.getInt("a_b",0);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(Color.rgb(r,g,b)));
     }
     @Override
     protected void onResume() {
         super.onResume();
+
+        //set color of action bar
+        int r=sharedPreferences.getInt("a_r",0);
+        int g=sharedPreferences.getInt("a_g",0);
+        int b=sharedPreferences.getInt("a_b",0);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(Color.rgb(r,g,b)));
+
         //lijst voor opgeslagen films
         final List<movie> films = database.MovieDAO().getAll();
         final List<tvshow> tvshows = database.TvDAO().getAll();

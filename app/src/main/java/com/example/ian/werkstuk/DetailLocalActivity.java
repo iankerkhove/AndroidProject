@@ -1,8 +1,13 @@
 package com.example.ian.werkstuk;
 
 import android.arch.persistence.room.Database;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,21 +21,22 @@ import com.example.ian.werkstuk.model.movie;
 import com.example.ian.werkstuk.model.tvshow;
 
 public class DetailLocalActivity extends AppCompatActivity {
-    DB database = null;
-    int id;
-    TextView titel;
-    TextView tagline;
-    TextView release;
-    TextView orilanguage;
-    TextView spolanguage;
-    TextView spolanguageLabel;
-    TextView genre;
-    TextView statu;
-    TextView productionCountryLabel;
-    TextView productionCountry;
-    TextView votesAverage;
-    TextView overview;
-    ImageView image;
+    private DB database = null;
+    private int id;
+    private TextView titel;
+    private TextView tagline;
+    private TextView release;
+    private TextView orilanguage;
+    private TextView spolanguage;
+    private TextView spolanguageLabel;
+    private TextView genre;
+    private TextView statu;
+    private TextView productionCountryLabel;
+    private TextView productionCountry;
+    private TextView votesAverage;
+    private TextView overview;
+    private ImageView image;
+    private SharedPreferences sharedPreferences;
 
 
     @Override
@@ -56,6 +62,8 @@ public class DetailLocalActivity extends AppCompatActivity {
         titel = (TextView) findViewById(R.id.title);
 
         database = DB.getDb(this);
+        sharedPreferences = getSharedPreferences("key_clr", Context.MODE_PRIVATE);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -89,9 +97,13 @@ public class DetailLocalActivity extends AppCompatActivity {
             });
         }
 
-
-
-
+        //set color of action bar
+        CollapsingToolbarLayout t = findViewById(R.id.toolbar_layout);
+        int r=sharedPreferences.getInt("a_r",0);
+        int g=sharedPreferences.getInt("a_g",0);
+        int b=sharedPreferences.getInt("a_b",0);
+        t.setBackground(
+                new ColorDrawable(Color.rgb(r,g,b)));
     }
 
     public void fillTv() {

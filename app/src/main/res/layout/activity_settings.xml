@@ -10,25 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <RadioGroup
-            android:id="@+id/idForRadioGroup"
-            android:layout_margin="16dp"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Action bar"
-                android:id="@+id/radio0"/>
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status Bar"
-                android:id="@+id/radio1"/>
-        </RadioGroup>
-
+            android:text="@string/pick"
+            android:id="@+id/labelDiscover"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textAlignment="center"/>
         <LinearLayout
             android:layout_margin="16dp"
             android:layout_width="match_parent"
@@ -101,12 +90,6 @@
             android:id="@+id/seekBarBlue"
             android:theme="@style/blueTheme"
             android:max="255"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonSave"
-            android:onClick="btnSave"
-            android:text="Save"/>
     </LinearLayout>
 
 

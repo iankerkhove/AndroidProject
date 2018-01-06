@@ -1,10 +1,15 @@
 package com.example.ian.werkstuk;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -36,29 +41,29 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DetailActivity extends AppCompatActivity {
-    String request;
+    private String request;
     private String BASEM_URL = "http://api.themoviedb.org/3/movie/";
     private String METAM = "?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US";
     private String BASET_URL = "https://api.themoviedb.org/3/tv/";
     private String METAT = "?api_key=1da7f7f08b98f2fb0be745269a36728b&language=en-US";
-    TextView titel;
-    TextView tagline;
-    TextView release;
-    TextView orilanguage;
-    TextView spolanguage;
-    TextView spolanguageLabel;
-    TextView genre;
-    TextView statu;
-    TextView productionCountryLabel;
-    TextView productionCountry;
-    TextView votesAverage;
-    TextView overview;
-    ImageView image;
-    private Bitmap bmp;
-    String sort = "";
-    DB database = null;
-    String title = "";
-    String id = "";
+    private TextView titel;
+    private TextView tagline;
+    private TextView release;
+    private TextView orilanguage;
+    private TextView spolanguage;
+    private TextView spolanguageLabel;
+    private TextView genre;
+    private TextView statu;
+    private TextView productionCountryLabel;
+    private TextView productionCountry;
+    private TextView votesAverage;
+    private TextView overview;
+    private ImageView image;
+    private String sort = "";
+    private DB database = null;
+    private String title = "";
+    private String id = "";
+    private SharedPreferences sharedPreferences;
 
     public boolean isTablet() {
         try {
@@ -88,12 +93,9 @@ public class DetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-
+        sharedPreferences = getSharedPreferences("key_clr", Context.MODE_PRIVATE);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-
         titel = (TextView) findViewById(R.id.title);
-
         Intent i = getIntent();
         titel.setText(i.getStringExtra("naam"));
 
@@ -155,6 +157,13 @@ public class DetailActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "@string/toast_invalid", Toast.LENGTH_LONG);
             toast.show();
         }
+        //set color of action bar
+        CollapsingToolbarLayout t = findViewById(R.id.toolbar_layout);
+        int r=sharedPreferences.getInt("a_r",0);
+        int g=sharedPreferences.getInt("a_g",0);
+        int b=sharedPreferences.getInt("a_b",0);
+        t.setBackground(
+                new ColorDrawable(Color.rgb(r,g,b)));
     }
 
     @Override
